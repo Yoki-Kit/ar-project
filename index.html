@@ -9,24 +9,49 @@
   <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const video = document.querySelector("#vid");
+  <style>
+    body { margin:0; overflow:hidden; font-family: Arial; }
 
-      const target = document.querySelector("#target");
+    /* UI Overlay */
+    .ui {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+    }
 
-      target.addEventListener("targetFound", () => {
-        video.play();
-      });
+    .btn {
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
 
-      target.addEventListener("targetLost", () => {
-        video.pause();
-      });
-    });
-  </script>
+    .top-text {
+      position: fixed;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      z-index: 10;
+      text-shadow: 0 0 10px black;
+    }
+  </style>
 </head>
 
-<body style="margin:0; overflow:hidden;">
+<body>
+
+<div class="top-text">📸 Scan the Card</div>
+
+<div class="ui">
+  <button class="btn" id="soundBtn">🔊 Tap for Sound</button>
+</div>
 
 <a-scene
   mindar-image="imageTargetSrc: assets/targets.mind;"
@@ -47,7 +72,6 @@
     </video>
   </a-assets>
 
-  <!-- IMAGE TARGET -->
   <a-entity mindar-image-target="targetIndex: 0" id="target">
 
     <a-video
@@ -63,6 +87,28 @@
   <a-camera position="0 0 0"></a-camera>
 
 </a-scene>
+
+<script>
+  const video = document.querySelector("#vid");
+  const target = document.querySelector("#target");
+  const btn = document.querySelector("#soundBtn");
+
+  // Play when image found
+  target.addEventListener("targetFound", () => {
+    video.play();
+  });
+
+  target.addEventListener("targetLost", () => {
+    video.pause();
+  });
+
+  // Sound button
+  btn.addEventListener("click", () => {
+    video.muted = false;
+    video.play();
+    btn.innerText = "🔊 Sound ON";
+  });
+</script>
 
 </body>
 </html>
